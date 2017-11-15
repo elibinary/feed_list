@@ -17,6 +17,8 @@
 !/log/.keep
 !/tmp/.keep
 
+/vendor/cache/*
+/vendor/cache/
 /node_modules
 /yarn-error.log
 .idea/
