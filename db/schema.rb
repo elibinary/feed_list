@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171117102001) do
+ActiveRecord::Schema.define(version: 20171117142118) do
 
   create_table "comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
     t.integer "user_id", null: false, comment: "用户 ID"
@@ -44,7 +44,9 @@ ActiveRecord::Schema.define(version: 20171117102001) do
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "team_id", null: false
     t.index ["safe_code"], name: "index_projects_on_safe_code", unique: true
+    t.index ["team_id"], name: "index_projects_on_team_id"
     t.index ["user_id"], name: "index_projects_on_user_id"
   end
 

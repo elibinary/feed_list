@@ -1,5 +1,6 @@
 class Team < ApplicationRecord
   include BuildSafeCode
+  include EventHandler
 
   has_many :user_teams
   has_many :events, as: :eventable
@@ -7,7 +8,7 @@ class Team < ApplicationRecord
   belongs_to :user
 
   before_save :ensure_safe_code
-  after_commit :record_event, on: :create
+  # after_commit :record_event, on: :create
 
   def as_event_json
     {
@@ -19,8 +20,8 @@ class Team < ApplicationRecord
 
   private
 
-  def record_event(act='create')
-    content = '创建了团队'
-    Event.create(user: user, eventable: self, team: self, project_id: 0, content: content)
-  end
+  # def record_event(act='create')
+  #   content = '创建了团队'
+  #   Event.create(user: user, eventable: self, team: self, project_id: 0, content: content)
+  # end
 end
