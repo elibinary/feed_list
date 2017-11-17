@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171116070345) do
+ActiveRecord::Schema.define(version: 20171117102001) do
+
+  create_table "comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+    t.integer "user_id", null: false, comment: "用户 ID"
+    t.integer "todo_id", null: false
+    t.string "content"
+    t.boolean "deleted", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["todo_id"], name: "index_comments_on_todo_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
+  end
 
   create_table "events", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
     t.integer "team_id", null: false, comment: "团队 ID"
@@ -45,6 +56,22 @@ ActiveRecord::Schema.define(version: 20171116070345) do
     t.datetime "updated_at", null: false
     t.index ["safe_code"], name: "index_teams_on_safe_code", unique: true
     t.index ["user_id"], name: "index_teams_on_user_id"
+  end
+
+  create_table "todos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+    t.integer "user_id", null: false, comment: "用户 ID"
+    t.integer "executor_id", comment: "执行者 ID"
+    t.integer "project_id", null: false, comment: "项目 ID"
+    t.string "safe_code", limit: 191, null: false
+    t.string "content"
+    t.date "deadline"
+    t.boolean "deleted", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["executor_id"], name: "index_todos_on_executor_id"
+    t.index ["project_id"], name: "index_todos_on_project_id"
+    t.index ["safe_code"], name: "index_todos_on_safe_code", unique: true
+    t.index ["user_id"], name: "index_todos_on_user_id"
   end
 
   create_table "user_projects", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|

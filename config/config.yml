@@ -1,0 +1,12 @@
+
+defaults: &defaults
+  jwt_secret: '6a20e40c68df6a790a129a7226cc6685'
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
