@@ -1,6 +1,6 @@
 require 'jwt'
 
-class FeedListUtil
+class FeedListToken
   class << self
     def encode(payload)
       payload[:exp] ||= 1.months.after.to_i

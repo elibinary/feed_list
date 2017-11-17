@@ -20,7 +20,7 @@ class Api::BaseController < ApplicationController
   def fetch_user
     token = params[:feed_token] || request.headers['FEED-TOKEN']
     return unless token
-    payload = FeedListUtil.decode(token)
+    payload = FeedListToken.decode(token)
     return unless payload
     User.find_by(user_key: payload['openid'])
   end

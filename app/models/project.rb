@@ -7,4 +7,12 @@ class Project < ApplicationRecord
   belongs_to :user
 
   before_save :ensure_safe_code
+
+  def as_event_json
+    {
+      type: 'project',
+      id: safe_code,
+      name: name
+    }
+  end
 end

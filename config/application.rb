@@ -14,5 +14,7 @@ module FeedList
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
+
+    config.paths['config/routes.rb'].concat(Dir[config.root.join('config/routes/**/*.rb')])
   end
 end
