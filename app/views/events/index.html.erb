@@ -5,42 +5,29 @@
       <h2>Team: <%= @team.name %></h2>
       <% current_date = nil %>
       <% current_pj = nil %>
+      <input id="current-date" value="" hidden>
+      <input id="current-pj-id" value="" hidden>
       <div id="event-list">
-        <% @events_list.each do |event| %>
-            <% if event[:created_at].to_date != current_date %>
-                <% current_date = event[:created_at].to_date %>
-                <% current_pj = event[:superior] %>
-                <h3>日期： <%= current_date %></h3>
-                <hr>
-                <h4>
-                  <a href="#"><%= current_pj[:name] %></a>
-                </h4>
-                <hr>
-            <% elsif event[:superior][:id] != current_pj[:id] %>
-                <% current_pj = event[:superior] %>
-                <h4>
-                  <a href="#"><%= current_pj[:name] %></a>
-                </h4>
-                <hr>
-            <% end %>
+        <!--<template v-for="event in events">-->
+          <!--<template v-if="next_date">-->
+            <!--<h3>日期：{{ event.created_at }}</h3>-->
+            <!--<hr>-->
+            <!--<h4>-->
+              <!--<a href="#">{{ event.superior.name }}</a>-->
+            <!--</h4>-->
+            <!--<hr>-->
+          <!--</template>-->
 
-            <div class="media">
-              <div class="media-left">
-                <a href="#">
-                  <img class="media-object" src="<%= event[:avatar_url] %>" alt="" width="64" height="64" style="border: 1px solid blanchedalmond;">
-                </a>
-              </div>
-              <div class="media-body">
-                <h4 class="media-heading">
-                  <a href="#"><%= event[:user_name] %></a>
-                  <%= event[:content][:content] %>
-                  :
-                  <a href="#"><%= event[:content][:name] %></a>
-                </h4>
-                <a href="#"><%= event[:content][:detail_content] %></a>
-              </div>
-            </div>
-        <% end %>
+          <!--<template v-if="not_current_pj">-->
+            <!--<h4>-->
+              <!--<a href="#">{{ event.superior.name }}</a>-->
+            <!--</h4>-->
+            <!--<hr>-->
+          <!--</template>-->
+        <!--</template>-->
+      </div>
+      <div class="alert alert-success" role="alert" id="loading-item" hidden>
+        Loading...
       </div>
     </div>
     <div class="col-md-2"></div>
@@ -52,6 +39,7 @@
 		(function(){
       var lastScrolly = window.scrollY
       var loading_state = false
+      var page = 1
 
       function handleScroll() {
         if (lastScrolly === window.scrollY) {
@@ -63,37 +51,44 @@
 
         if (window.scrollY + window.innerHeight + 50 > document.body.offsetHeight) {
 //          alert(window.scrollY + window.innerHeight)
-
+					fetchContent(page)
         }
 
 				window.setTimeout(handleScroll, 1000)
 			}
 
-			function fetchContent() {
+			function fetchContent(req_page) {
         if (loading_state) {
         	return
         } else {
         	loading_state = true
         }
 
+        var current_date = $('#current-date').val()
+				var current_pj_id = $('#current-pj-id').val()
 				$.ajax({
 					url: "/events",
 					dataType: "json",
 					async: true,
-					data: { "team_id": getParameterByName('team_id') },
+					data: { "team_id": getParameterByName('team_id'), "current_date": current_date, "current_pj_id": current_pj_id, page: req_page },
 					type: "GET",
 					success: function(req) {
-            // TODO
+						if (req.list_html) {
+							$('#event-list').append(req.list_html)
+							$('#current-date').val(req.current_date)
+							$('#current-pj-id').val(req.current_pj_id)
+
+              console.log(page)
+              page += 1
+							console.log(page)
+            }
+
 						loading_state = false
 					},
 					error: function() {
 						loading_state = false
 					}
 				});
-			}
-
-			function generate_list_html(events) {
-        var eventList = ""
 			}
 
 			function getParameterByName(name) {
@@ -107,7 +102,7 @@
 			}
 
 			handleScroll()
-			alert(getParameterByName('team_id'))
+			fetchContent(page)
 		})();
   </script>
 <% end %>
