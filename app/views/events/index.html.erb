@@ -5,42 +5,109 @@
       <h2>Team: <%= @team.name %></h2>
       <% current_date = nil %>
       <% current_pj = nil %>
-      <% @events_list.each do |event| %>
-        <% if event[:created_at].to_date != current_date %>
-          <% current_date = event[:created_at].to_date %>
-          <% current_pj = event[:superior] %>
-          <h3>日期： <%= current_date %></h3>
-          <hr>
-          <h4>
-            <a href="#"><%= current_pj[:name] %></a>
-          </h4>
-          <hr>
-        <% elsif event[:superior][:id] != current_pj[:id] %>
-          <% current_pj = event[:superior] %>
-          <h4>
-            <a href="#"><%= current_pj[:name] %></a>
-          </h4>
-          <hr>
-        <% end %>
+      <div id="event-list">
+        <% @events_list.each do |event| %>
+            <% if event[:created_at].to_date != current_date %>
+                <% current_date = event[:created_at].to_date %>
+                <% current_pj = event[:superior] %>
+                <h3>日期： <%= current_date %></h3>
+                <hr>
+                <h4>
+                  <a href="#"><%= current_pj[:name] %></a>
+                </h4>
+                <hr>
+            <% elsif event[:superior][:id] != current_pj[:id] %>
+                <% current_pj = event[:superior] %>
+                <h4>
+                  <a href="#"><%= current_pj[:name] %></a>
+                </h4>
+                <hr>
+            <% end %>
 
-        <div class="media">
-          <div class="media-left">
-            <a href="#">
-              <img class="media-object" src="<%= event[:avatar_url] %>" alt="" width="64" height="64" style="border: 1px solid blanchedalmond;">
-            </a>
-          </div>
-          <div class="media-body">
-            <h4 class="media-heading">
-              <a href="#"><%= event[:user_name] %></a>
-              <%= event[:content][:content] %>
-              :
-              <a href="#"><%= event[:content][:name] %></a>
-            </h4>
-            <a href="#"><%= event[:content][:detail_content] %></a>
-          </div>
-        </div>
-      <% end %>
+            <div class="media">
+              <div class="media-left">
+                <a href="#">
+                  <img class="media-object" src="<%= event[:avatar_url] %>" alt="" width="64" height="64" style="border: 1px solid blanchedalmond;">
+                </a>
+              </div>
+              <div class="media-body">
+                <h4 class="media-heading">
+                  <a href="#"><%= event[:user_name] %></a>
+                  <%= event[:content][:content] %>
+                  :
+                  <a href="#"><%= event[:content][:name] %></a>
+                </h4>
+                <a href="#"><%= event[:content][:detail_content] %></a>
+              </div>
+            </div>
+        <% end %>
+      </div>
     </div>
     <div class="col-md-2"></div>
   </div>
 </div>
+
+<% content_for :js_doc do %>
+  <script>
+		(function(){
+      var lastScrolly = window.scrollY
+      var loading_state = false
+
+      function handleScroll() {
+        if (lastScrolly === window.scrollY) {
+        	window.setTimeout(handleScroll, 100)
+          return
+        } else {
+        	lastScrolly = window.scrollY
+        }
+
+        if (window.scrollY + window.innerHeight + 50 > document.body.offsetHeight) {
+//          alert(window.scrollY + window.innerHeight)
+
+        }
+
+				window.setTimeout(handleScroll, 1000)
+			}
+
+			function fetchContent() {
+        if (loading_state) {
+        	return
+        } else {
+        	loading_state = true
+        }
+
+				$.ajax({
+					url: "/events",
+					dataType: "json",
+					async: true,
+					data: { "team_id": getParameterByName('team_id') },
+					type: "GET",
+					success: function(req) {
+            // TODO
+						loading_state = false
+					},
+					error: function() {
+						loading_state = false
+					}
+				});
+			}
+
+			function generate_list_html(events) {
+        var eventList = ""
+			}
+
+			function getParameterByName(name) {
+				var url = window.location.href;
+				name = name.replace(/[\[\]]/g, "\\$&");
+				var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+					results = regex.exec(url);
+				if (!results) return null;
+				if (!results[2]) return '';
+				return decodeURIComponent(results[2].replace(/\+/g, " "));
+			}
+
+			handleScroll()
+			alert(getParameterByName('team_id'))
+		})();
+  </script>
+<% end %>

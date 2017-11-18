@@ -3,7 +3,7 @@ class EventsController < ApplicationController
   # GET /events
   def index
     @team = Team.find_by(safe_code: params[:team_id])
-    @events = Event.where(team_id: @team.id).order(id: :desc).page(params[:page]).per(5)
+    @events = Event.where(team_id: @team.id).order(id: :desc).page(params[:page]).per(10)
     @events_list = @events.map(&:as_show_json)
 
     respond_to do |format|
