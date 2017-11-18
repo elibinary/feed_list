@@ -10,9 +10,8 @@ class CreateEvents < ActiveRecord::Migration[5.1]
 
       t.timestamps
 
-      t.index :team_id
+      t.index [:team_id, :project_id]
       t.index :user_id
-      t.index :project_id
     end
   end
 end

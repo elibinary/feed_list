@@ -9,7 +9,7 @@ class Project < ApplicationRecord
   belongs_to :team
 
   before_save :ensure_safe_code
-  # after_commit :record_event, on: :create
+  after_commit :into_user_project, on: :create
 
   def as_event_json
     {
@@ -29,4 +29,9 @@ class Project < ApplicationRecord
     end
   end
 
+  private
+
+  def into_user_project
+    UserProject.create(user_id: user_id, project_id: id)
+  end
 end

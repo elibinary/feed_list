@@ -8,6 +8,10 @@ class User < ApplicationRecord
 
   before_save :ensure_user_key
 
+  def team_projects(team)
+    team.project_ids & user_projects.pluck(:project_id)
+  end
+
   private
 
   def ensure_user_key

@@ -3,7 +3,7 @@ class Api::V1::EventsController < Api::BaseController
 
   # GET /events
   def index
-    events_temp = Event.where(team_id: @team.id)
+    events_temp = Event.where(team_id: @team.id).where(project_id: current_user.team_projects(@team).push(0))
     if @project
       events_temp.includes(:user, :eventable).where(project_id: @project)
     elsif @user

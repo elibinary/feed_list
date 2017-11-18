@@ -15,6 +15,7 @@ RSpec.describe Api::V1::EventsController do
     it 'return events list' do
       user = create :user
       team = create :team, user: user
+      # byebug
       # event = create :event, user: user, team: team, eventable: team, project_id: 0, content: '创建了团队'
 
       token = FeedListToken.encode(openid: user.user_key)
