@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171117142118) do
+ActiveRecord::Schema.define(version: 20171118092231) do
 
   create_table "comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
     t.integer "user_id", null: false, comment: "用户 ID"
@@ -70,6 +70,7 @@ ActiveRecord::Schema.define(version: 20171117142118) do
     t.boolean "deleted", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "state", default: 0, null: false
     t.index ["executor_id"], name: "index_todos_on_executor_id"
     t.index ["project_id"], name: "index_todos_on_project_id"
     t.index ["safe_code"], name: "index_todos_on_safe_code", unique: true

@@ -1,4 +1,6 @@
 class Comment < ApplicationRecord
+  include EventHandler
+
   belongs_to :todo
   belongs_to :user
 

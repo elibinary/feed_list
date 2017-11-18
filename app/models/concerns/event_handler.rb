@@ -5,11 +5,11 @@ module EventHandler
     after_commit :record_event_with_content, on: :create
   end
 
-  def record_event_with_content(content=nil)
+  def record_event_with_content(content=nil, act_user=nil)
     params = case self
                when Team
                  {
-                   user: user,
+                   user: act_user || user,
                    eventable: self,
                    team: self,
                    project_id: 0,
@@ -17,7 +17,7 @@ module EventHandler
                  }
                when Project
                  {
-                   user: user,
+                   user: act_user || user,
                    eventable: self,
                    team_id: team_id,
                    project: self,
@@ -25,7 +25,7 @@ module EventHandler
                  }
                when Todo
                  {
-                   user: user,
+                   user: act_user || user,
                    eventable: self,
                    team_id: project.team_id,
                    project_id: project_id,
@@ -33,10 +33,10 @@ module EventHandler
                  }
                when Comment
                  {
-                   user: user,
+                   user: act_user || user,
                    eventable: self,
-                   team_id: project.team_id,
-                   project_id: project_id,
+                   team_id: todo.project.team_id,
+                   project_id: todo.project_id,
                    content: content || '回复了任务'
                  }
                else
