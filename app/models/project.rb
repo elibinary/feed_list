@@ -19,10 +19,14 @@ class Project < ApplicationRecord
     }
   end
 
-  private
+  def clear_project_cache
+    Rails.cache.delete("project:#{id}:members")
+  end
 
-  # def record_event(act='create')
-  #   content = '创建了项目'
-  #   Event.create(user: user, eventable: self, team: team, project: self, content: content)
-  # end
+  def members
+    Rails.cache.fetch("project:#{id}:members") do
+      user_projects.pluck(:user_id).push(user_id)
+    end
+  end
+
 end

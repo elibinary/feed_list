@@ -18,10 +18,13 @@ class Team < ApplicationRecord
     }
   end
 
-  private
+  def clear_team_cache
+    Rails.cache.delete("team:#{id}:members")
+  end
 
-  # def record_event(act='create')
-  #   content = '创建了团队'
-  #   Event.create(user: user, eventable: self, team: self, project_id: 0, content: content)
-  # end
+  def members
+    Rails.cache.fetch("team:#{id}:members") do
+      user_teams.pluck(:user_id).push(user_id)
+    end
+  end
 end

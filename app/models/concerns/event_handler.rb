@@ -2,10 +2,10 @@ module EventHandler
   extend ActiveSupport::Concern
 
   included do |base|
-    after_commit :record_event_with_create, on: :create
+    after_commit :record_event_with_content, on: :create
   end
 
-  def record_event_with_create
+  def record_event_with_content(content=nil)
     params = case self
                when Team
                  {
@@ -13,15 +13,15 @@ module EventHandler
                    eventable: self,
                    team: self,
                    project_id: 0,
-                   content: '创建了团队'
+                   content: content || '创建了团队'
                  }
                when Project
                  {
                    user: user,
                    eventable: self,
-                   team: team,
+                   team_id: team_id,
                    project: self,
-                   content: '创建了项目'
+                   content: content || '创建了项目'
                  }
                when Todo
                  {
@@ -29,7 +29,7 @@ module EventHandler
                    eventable: self,
                    team_id: project.team_id,
                    project_id: project_id,
-                   content: '创建了任务'
+                   content: content || '创建了任务'
                  }
                when Comment
                  {
@@ -37,7 +37,7 @@ module EventHandler
                    eventable: self,
                    team_id: project.team_id,
                    project_id: project_id,
-                   content: '回复了任务'
+                   content: content || '回复了任务'
                  }
                else
                  {}

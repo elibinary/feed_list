@@ -1,0 +1,46 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+      <h2>Team: <%= @team.name %></h2>
+      <% current_date = nil %>
+      <% current_pj = nil %>
+      <% @events_list.each do |event| %>
+        <% if event[:created_at].to_date != current_date %>
+          <% current_date = event[:created_at].to_date %>
+          <% current_pj = event[:superior] %>
+          <h3>日期： <%= current_date %></h3>
+          <hr>
+          <h4>
+            <a href="#"><%= current_pj[:name] %></a>
+          </h4>
+          <hr>
+        <% elsif event[:superior][:id] != current_pj[:id] %>
+          <% current_pj = event[:superior] %>
+          <h4>
+            <a href="#"><%= current_pj[:name] %></a>
+          </h4>
+          <hr>
+        <% end %>
+
+        <div class="media">
+          <div class="media-left">
+            <a href="#">
+              <img class="media-object" src="<%= event[:avatar_url] %>" alt="" width="64" height="64" style="border: 1px solid blanchedalmond;">
+            </a>
+          </div>
+          <div class="media-body">
+            <h4 class="media-heading">
+              <a href="#"><%= event[:user_name] %></a>
+              <%= event[:content][:content] %>
+              :
+              <a href="#"><%= event[:content][:name] %></a>
+            </h4>
+            <%= event[:content][:detail_content] %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+</div>
