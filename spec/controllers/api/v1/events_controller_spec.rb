@@ -22,7 +22,6 @@ RSpec.describe Api::V1::EventsController do
 
       get :index, params: { feed_token: token, team: team.safe_code, format: :json }
       res = JSON.parse(response.body)
-      byebug
       expect(res['events'].count).to eq(1)
       expect(res['events'].first['user_name']).to eq(user.nickname)
     end
